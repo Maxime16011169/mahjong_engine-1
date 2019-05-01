@@ -49,8 +49,8 @@ public class MahjongBoard implements Board, Cloneable {
         this.currentWind = wind;
         this.uuid = uuid;
         this.zones = zones;
-        indexToTile=null;
-        tileToZone=null;
+        indexToTile=new HashMap<>();
+        tileToZone=new HashMap<>();
     }
 
     /**
@@ -64,8 +64,8 @@ public class MahjongBoard implements Board, Cloneable {
         for( TileZoneIdentifier tzi : TileZoneIdentifier.values()){
             this.zones.put(tzi,new MahjongTileZone(tzi));
         }
-        indexToTile=null;
-        tileToZone=null;
+        indexToTile=new HashMap<>();
+        tileToZone=new HashMap<>();
     }
 
     @Override
@@ -139,7 +139,7 @@ public class MahjongBoard implements Board, Cloneable {
 
     @Override
     public GameTileInterface getTile(int gameIndex) throws GameException {
-        if(indexToTile == null){
+        if(indexToTile.isEmpty()){
             buildReverseSearch();
         }
         GameTileInterface result = indexToTile.get(gameIndex);
@@ -156,7 +156,7 @@ public class MahjongBoard implements Board, Cloneable {
 
     @Override
     public TileZone getTileZoneOfTile(GameTileInterface tile) throws GameException {
-        if(tileToZone == null){
+        if(tileToZone.isEmpty()){
             buildReverseSearch();
         }
         TileZone result = this.tileToZone.get(tile);
@@ -180,8 +180,6 @@ public class MahjongBoard implements Board, Cloneable {
     }
     
     private void buildReverseSearch() throws GameException{
-        this.indexToTile = new HashMap<>();
-        this.tileToZone = new HashMap<>();
         for(TileZone t : this.zones.values()){
             for(GameTileInterface tile : t.getTiles()){
                 this.indexToTile.put(tile.getGameID(), tile);

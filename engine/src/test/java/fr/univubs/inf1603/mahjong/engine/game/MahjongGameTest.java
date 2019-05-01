@@ -12,6 +12,7 @@ import fr.univubs.inf1603.mahjong.engine.rule.RulesException;
 import fr.univubs.inf1603.mahjong.Wind;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Assert;
@@ -28,6 +29,37 @@ public class MahjongGameTest {
 
     
 
+    
+    /**
+     * Test of getBoard method, of class MahjongGame.
+     */
+    @Test
+    public void testGetBoard_Wind() {
+        
+        try {
+            System.out.println("getBoard");
+            Wind wind = Wind.NORTH;
+            GameRule rule = new GameRuleFactory().create("SILLY");
+            MahjongBoard board = new MahjongBoard(Wind.WEST);
+            MahjongGame instance = new MahjongGame(rule, board, (Move)null, Duration.ofSeconds(5), Duration.ofSeconds(5), new int[4], UUID.randomUUID(), Wind.values());
+            MahjongBoard result = (MahjongBoard) instance.getBoard(wind);
+            MahjongBoard expResult = (MahjongBoard) board.getViewFromWind(wind);
+            assertEquals(expResult.getCurrentWind(), result.getCurrentWind());
+            for (Object y : expResult.getZones().keySet())
+            {
+                if (!result.getZones().containsKey(y)) {
+                    fail();
+                }
+            }
+            
+        }   
+        catch (GameException | RulesException ex) {
+            fail("MahjongGame threw an exception :"+ex);
+        }
+    }
+    
+     
+    
     /**
      * Test of getBoard method, of class MahjongGame.
      */
